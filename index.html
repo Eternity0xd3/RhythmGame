@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="Rhythm game" content="width=device-width, initial-scale=1.0" />
+    <title>Rhythm game</title>
+    <link rel="stylesheet" href="./styles/style.css" />
+  </head>
+  <body>
+    <div id="bg_layer">
+      <div id="game">
+        <div id="bar"></div>
+        <div id="line0">
+          <img id="hitbox0" class="hitbox" />
+        </div>
+        <div id="line1">
+          <img id="hitbox1" class="hitbox" />
+        </div>
+        <div id="line2">
+          <img id="hitbox2" class="hitbox" />
+        </div>
+        <div id="line3">
+          <img id="hitbox3" class="hitbox" />
+        </div>
+        <div id="output-combo"></div>
+        <div id="output-acc"></div>
+        <div id="output-judge"></div>
+      </div>
+      <div id="menu">
+        <div id="content">
+          <h1>Game</h1>
+          <h3>subtitle!!!</h3>
+          <p>DescriptionDescriptionDescriptionDescriptionDescription</p>
+          <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+          <b>Play it with full screen</b>
+          <br /><br />
+          <div id="btn-group" style="display: block">
+            <button id="start-btn">点击开始</button>
+            <button id="settings-btn">游戏设置</button>
+            <br /><br />
+          </div>
+        </div>
+      </div>
+      <div id="pause">
+        <h1>PAUSE</h1>
+        <br /><br />
+        <button id="continue-btn">继续</button>
+        <button id="quit-btn">退出</button>
+      </div>
+    </div>
+
+    <script src="./scripts/chart.js"></script>
+    <script src="./scripts/game.js"></script>
+    <script src="./scripts/line.js"></script>
+    <script src="./scripts/note.js"></script>
+
+    <script>
+      //main script
+      let g = new Game("line0", "line1", "line2", "line3");
+    </script>
+  </body>
+</html>

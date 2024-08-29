@@ -1,0 +1,160 @@
+body {
+  background-color: rgb(230, 198, 226);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-image: url("../static/img/bg/bg3.png");
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+
+#bg_layer {
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: 100vh;
+}
+
+#game {
+  width: 400px;
+  height: 650px;
+  top: 30px;
+  background-color: rgba(0, 0, 0, 0.85);
+  margin: auto auto;
+  border: 3px solid white;
+  position: relative;
+}
+
+#line0 {
+  padding: 0 auto;
+  position: absolute;
+  left: 10px;
+  width: 80px;
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+}
+#line1 {
+  padding: 0 auto;
+  position: absolute;
+  left: 110px;
+  width: 80px;
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+}
+#line2 {
+  padding: 0 auto;
+  position: absolute;
+  left: 210px;
+  width: 80px;
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+}
+#line3 {
+  padding: 0 auto;
+  position: absolute;
+  left: 310px;
+  width: 80px;
+  height: 600px;
+  background-size: cover;
+  background-position: center;
+}
+
+div.note {
+  width: 80px;
+  height: 10px;
+  background-color: rgb(255, 247, 103);
+  position: absolute;
+}
+
+img.hitbox {
+  width: 160px;
+  height: 160px;
+  top: 520px;
+  left: -40px;
+  position: absolute;
+  display: none;
+  mix-blend-mode: screen;
+}
+
+#output-combo {
+  position: absolute;
+  width: 10%;
+  left: 45%;
+  top: 50px;
+  text-align: center;
+  color: white;
+}
+
+#output-judge {
+  position: absolute;
+  width: 30%;
+  left: 35%;
+  top: 80px;
+  text-align: center;
+  color: white;
+}
+
+#output-acc {
+  position: absolute;
+  left: 110%;
+  top: 30px;
+  color: white;
+}
+
+#bar {
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  top: 590px;
+  background-color: rgb(243, 196, 126);
+  border: 2px solid chocolate;
+}
+
+#menu {
+  width: 100%;
+  position: fixed;
+  top: 20px;
+  left: 0;
+}
+
+#content {
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 70%;
+  height: 70%;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  margin: auto auto;
+  position: relative;
+}
+
+#pause {
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  width: 300px;
+  height: 200px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+button {
+  text-decoration: none;
+  background: #446da2;
+  color: #f2f2f2;
+  padding: 10px 30px 10px 30px;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 3px;
+  -webkit-transition: all linear 0.3s;
+  -moz-transition: all linear 0.3s;
+  transition: all linear 0.3s;
+}
