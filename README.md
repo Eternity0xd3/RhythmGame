@@ -8,6 +8,6 @@ The textures are from "[Rurudo 4K V](https://m.mugzone.net/store/skin/detail/605
 
 
 
-> I would appreciate it if you can provide me some useful suggestions and instruction.( >w< )
+> I would appreciate it if you could provide me some useful suggestions and instructions.( >w< )
 >
 > 新手第一次做js项目，请多多指教( >w< )
