@@ -183,7 +183,7 @@ class Game {
     this.speed = Number(this.speedInput.value);
     this.bpm = Number(this.bpmInput.value);
     this.beat = Number(this.beatInput.value);
-    console.log([this.speed,this.bpm,this.beat])
+    console.log([this.speed, this.bpm, this.beat]);
   }
 
   pause() {
