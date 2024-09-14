@@ -5,6 +5,10 @@
     <meta name="Rhythm game" content="width=device-width, initial-scale=1.0" />
     <title>Rhythm game</title>
     <link rel="stylesheet" href="./styles/style.css" />
+    <script src="./scripts/chart.js"></script>
+    <script src="./scripts/game.js"></script>
+    <script src="./scripts/line.js"></script>
+    <script src="./scripts/note.js"></script>
   </head>
   <body>
     <div id="bg_layer">
@@ -27,7 +31,7 @@
         <div id="output-judge"></div>
       </div>
       <div id="menu">
-        <div id="content">
+        <div id="content-menu">
           <h1>Game</h1>
           <h3>subtitle!!!</h3>
           <p>DescriptionDescriptionDescriptionDescriptionDescription</p>
@@ -44,6 +48,25 @@
           </div>
         </div>
       </div>
+      <div id="settings">
+        <div id="content-settings">
+          <h2>Settings</h2>
+          <div class="input-group">
+            <h3 style="font-size: 1em; line-height: 1.3em">speed</h3>
+            <input class="input" id="speed" maxlength="3" />
+          </div>
+          <div class="input-group">
+            <h3 style="font-size: 1em; line-height: 1.3em">bpm</h3>
+            <input class="input" id="bpm" maxlength="5" />
+          </div>
+          <div class="input-group">
+            <h3 style="font-size: 1em; line-height: 1.3em">beat</h3>
+            <input class="input" id="beat" maxlength="3" />
+          </div>
+          <br />
+          <button id="save-btn">保存设置</button>
+        </div>
+      </div>
       <div id="pause">
         <h1>PAUSE</h1>
         <br /><br />
@@ -51,12 +74,6 @@
         <button id="quit-btn">退出</button>
       </div>
     </div>
-
-    <script src="./scripts/chart.js"></script>
-    <script src="./scripts/game.js"></script>
-    <script src="./scripts/line.js"></script>
-    <script src="./scripts/note.js"></script>
-
     <script>
       //main script
       let g = new Game("line0", "line1", "line2", "line3");

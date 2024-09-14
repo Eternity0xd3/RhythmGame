@@ -15,6 +15,11 @@ class Game {
     this.pauseDiv = document.getElementById("pause");
     this.start_button = document.getElementById("start-btn");
     this.settings_button = document.getElementById("settings-btn");
+    this.settingsDiv = document.getElementById("settings");
+    this.speedInput = document.getElementById("speed");
+    this.bpmInput = document.getElementById("bpm");
+    this.beatInput = document.getElementById("beat");
+    this.save_button = document.getElementById("save-btn");
     this.continue_button = document.getElementById("continue-btn");
     this.quit_button = document.getElementById("quit-btn");
     this.outputDivCombo = document.getElementById("output-combo");
@@ -22,15 +27,18 @@ class Game {
     this.outputDivJudge = document.getElementById("output-judge");
     this.events();
 
+    // init settings
+    this.speed = 13;
+    this.bpm = 200;
+    this.beat = 8;
+
     // init
     this.gameState = "menu"; // enum: menu/settings/running/pause
+    this.maxNotes = 20;
     this.fps = 60;
-    this.speed = 10;
     this.timer = 0;
     this.fallingTime = this.arrivingTiming();
     this.generator = "random";
-    this.chart = new Chart(200, 8, 20);
-    this.generateChart(this.timer);
 
     //output
     this.lastJudgement = "";
@@ -41,6 +49,7 @@ class Game {
     //initial display state
     this.gameDiv.style.display = "none";
     this.pauseDiv.style.display = "none";
+    this.settingsDiv.style.display = "none";
   }
 
   loop(speed, fps) {
@@ -140,6 +149,12 @@ class Game {
     this.quit_button.onclick = function () {
       document.location.reload();
     }.bind(this);
+    this.settings_button.onclick = function () {
+      this.showSettings();
+    }.bind(this);
+    this.save_button.onclick = function () {
+      this.saveSettings();
+    }.bind(this);
   }
 
   startGame() {
@@ -147,7 +162,28 @@ class Game {
     this.menu.style.display = "none";
     this.gameDiv.style.display = "block";
     this.bgLayer.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+    this.chart = new Chart(this.bpm, this.beat, this.maxNotes);
+    this.generateChart(this.timer);
     this.loop(this.speed, this.fps);
+  }
+
+  showSettings() {
+    this.gameState = "settings";
+    this.menu.style.display = "none";
+    this.settingsDiv.style.display = "block";
+    this.speedInput.value = this.speed;
+    this.bpmInput.value = this.bpm;
+    this.beatInput.value = this.beat;
+  }
+
+  saveSettings() {
+    this.gameState = "menu";
+    this.menu.style.display = "block";
+    this.settingsDiv.style.display = "none";
+    this.speed = Number(this.speedInput.value);
+    this.bpm = Number(this.bpmInput.value);
+    this.beat = Number(this.beatInput.value);
+    console.log([this.speed,this.bpm,this.beat])
   }
 
   pause() {
