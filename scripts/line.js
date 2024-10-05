@@ -55,8 +55,8 @@ class Line {
     return result;
   }
 
-  restartLine(){
-    this.noteGroup.forEach(element => {
+  restartLine() {
+    this.noteGroup.forEach((element) => {
       element.kill();
     });
     this.noteGroup = [];

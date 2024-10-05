@@ -21,6 +21,7 @@ class Game {
     this.beatInput = document.getElementById("beat");
     this.save_button = document.getElementById("save-btn");
     this.continue_button = document.getElementById("continue-btn");
+    this.restart_button = document.getElementById("restart-btn");
     this.quit_button = document.getElementById("quit-btn");
     this.outputDivCombo = document.getElementById("output-combo");
     this.outputDivAcc = document.getElementById("output-acc");
@@ -138,12 +139,12 @@ class Game {
           }
           break;
         case " ":
-          if(this.gameState == "menu"){
+          if (this.gameState == "menu") {
             this.startGame();
           }
           break;
         case "`":
-          if(this.gameState == "running"){
+          if (this.gameState == "running") {
             this.restart();
           }
       }
@@ -155,6 +156,10 @@ class Game {
     }.bind(this);
     this.continue_button.onclick = function () {
       this.continue();
+    }.bind(this);
+    this.restart_button.onclick = function () {
+      this.continue();
+      this.restart();
     }.bind(this);
     this.quit_button.onclick = function () {
       document.location.reload();
@@ -213,9 +218,9 @@ class Game {
 
   restart() {
     clearInterval(this.mainloop);
-    this.lines.forEach((element) =>{
+    this.lines.forEach((element) => {
       element.restartLine();
-    })
+    });
     this.lastJudgement = "";
     this.combo = 0;
     this.score = 0;
