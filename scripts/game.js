@@ -136,6 +136,16 @@ class Game {
           } else if (this.gameState == "pause") {
             this.continue();
           }
+          break;
+        case " ":
+          if(this.gameState == "menu"){
+            this.startGame();
+          }
+          break;
+        case "`":
+          if(this.gameState == "running"){
+            this.restart();
+          }
       }
     });
 
@@ -164,6 +174,7 @@ class Game {
     this.bgLayer.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
     this.chart = new Chart(this.bpm, this.beat, this.maxNotes);
     this.generateChart(this.timer);
+    this.timer = -1000;
     this.loop(this.speed, this.fps);
   }
 
@@ -198,6 +209,20 @@ class Game {
     this.gameState = "running";
     this.pauseDiv.style.display = "none";
     this.loop(this.speed, this.fps);
+  }
+
+  restart() {
+    clearInterval(this.mainloop);
+    this.lines.forEach((element) =>{
+      element.restartLine();
+    })
+    this.lastJudgement = "";
+    this.combo = 0;
+    this.score = 0;
+    this.noteCount = 0;
+    this.timer = 0;
+    this.chart.restart();
+    this.startGame();
   }
 
   linesMove(speed) {

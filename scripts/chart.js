@@ -11,6 +11,11 @@ class Chart {
     this.timePerBeat = (1000 * 60) / bpm / (noteBeat / 4);
   }
 
+  restart() {
+    this.chartList = [];
+    this.chartState = false;
+  }
+
   random(nowTiming) {
     let len = this.chartList.length;
     for (var i = 0; i < this.maxNotes - len; i++) {

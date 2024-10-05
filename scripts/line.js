@@ -55,6 +55,13 @@ class Line {
     return result;
   }
 
+  restartLine(){
+    this.noteGroup.forEach(element => {
+      element.kill();
+    });
+    this.noteGroup = [];
+  }
+
   hitbox() {
     let index = 0;
     if (this.animation !== null) {
