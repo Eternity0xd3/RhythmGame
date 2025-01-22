@@ -146,6 +146,9 @@ class Game {
         case "`":
           if (this.gameState == "running") {
             this.restart();
+          } else if (this.gameState == "pause") {
+            this.continue();
+            this.restart();
           }
       }
     });

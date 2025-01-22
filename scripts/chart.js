@@ -1,5 +1,7 @@
 // Tasks:
 // 1.generate chart
+// format:[[line,timing], [line,timing], ...]
+
 class Chart {
   constructor(bpm, noteBeat, maxNotes) {
     this.bpm = bpm;
