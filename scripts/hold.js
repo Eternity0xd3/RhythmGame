@@ -20,7 +20,7 @@ class Hold {
 
   move(speed) {
     this.y += speed;
-    this.note.style.bottom = (this.y + 20) + "px";
+    this.note.style.bottom = this.y + 20 + "px";
     if (this.holdingState == "holding") {
       this.hold.style.height -= speed;
     }
@@ -41,17 +41,17 @@ class Hold {
     }
     if (result != undefined) {
       // this.kill();
-      this.holdingState = "holding"
+      this.holdingState = "holding";
     }
     return result;
   }
 
-  update(getTiming){
-    if(getTiming >= this.timing + this.lastTime){
-      if(this.holdingState == "holding"){
+  update(getTiming) {
+    if (getTiming >= this.timing + this.lastTime) {
+      if (this.holdingState == "holding") {
         this.kill();
         return "perfect";
-      }else{
+      } else {
         this.kill();
         return "miss";
       }
@@ -59,7 +59,7 @@ class Hold {
     return null;
   }
 
-  miss(){
+  miss() {
     this.state = "miss";
     this.hold.style.color = rgba(255, 247, 103, 0.3);
   }

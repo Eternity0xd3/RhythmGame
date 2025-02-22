@@ -4,10 +4,10 @@
 class Game {
   constructor(line0, line1, line2, line3) {
     // instancing objects & get elements
-    this.line0 = new Line(line0);
-    this.line1 = new Line(line1);
-    this.line2 = new Line(line2);
-    this.line3 = new Line(line3);
+    this.line0 = new Line("line0");
+    this.line1 = new Line("line1");
+    this.line2 = new Line("line2");
+    this.line3 = new Line("line3");
     this.lines = [this.line0, this.line1, this.line2, this.line3];
     this.bgLayer = document.getElementById("bg_layer");
     this.gameDiv = document.getElementById("game");

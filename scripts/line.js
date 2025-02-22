@@ -7,9 +7,7 @@
 class Line {
   constructor(select, timer) {
     this.line = document.getElementById(select);
-    this.holdPressing = false;
     this.noteGroup = [];
-    this.holdGroup = [];
 
     //hitbox
     this.box = this.line.childNodes[1];
@@ -27,20 +25,9 @@ class Line {
     this.noteGroup.push(note);
   }
 
-  createHolds(targetTiming, lastTime) {
-    let hold = new Hold(this.line.id, targetTiming, lastTime);
-    this.holdGroup.push(hold);
-  }
-
   moveNotes(speed) {
     this.noteGroup.forEach((eachNote) => {
       eachNote.move(speed);
-    });
-  }
-
-  moveHolds(speed) {
-    this.holdGroup.forEach((eachHold) => {
-      eachHold.move(speed);
     });
   }
 
@@ -67,20 +54,6 @@ class Line {
     }
   }
 
-  updateHolds(isPressing){
-    if (this.holdGroup.length == 0) {
-      return;
-    }
-    let lastHold = this.holdGroup[0];
-    if(!isPressing)lastHold.miss();
-    result = lastHold.update();
-    if(result != null){
-      this.noteGroup.shift();
-      this.isPressing = false;
-    }
-    return result;
-  }
-
   judgeLine(nowTiming) {
     if (this.noteGroup.length == 0) {
       return;
@@ -93,21 +66,6 @@ class Line {
     return result;
   }
 
-  judgeHold(nowTiming){
-    if (this.holdGroup.length == 0) {
-      return;
-    }
-    let lastHold = this.holdGroup[0];
-    if(lastHold.holdingState != "unreached"){
-      return;
-    }
-    let result = lastHold.judgeHoldTop(nowTiming);
-    if (result != undefined) {
-      this.isPressing = true;
-    }
-    return result;
-  }
-  
   restartLine() {
     this.noteGroup.forEach((element) => {
       element.kill();
