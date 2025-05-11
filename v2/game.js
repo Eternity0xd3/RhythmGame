@@ -39,6 +39,8 @@ class Game {
     this.fps = 60;
     this.timer = 0;
     this.fallingTime = this.arrivingTiming();
+    this.keyStates = [0,0,0,0]
+    this.previousKeyStates = [0, 0, 0, 0];
     this.generator = "random";
 
     //output
@@ -236,32 +238,30 @@ class Game {
   linesMove(speed) {
     this.lines.forEach((eachLine) => {
       eachLine.moveNotes(speed);
-      let result = eachLine.killOutOfRangeNotes();
-      if (result == "killed") {
+      let result = eachLine.judgeLine(this.timer);
+      if (result == "MISS") {
         this.combo = 0;
         this.noteCount += 1;
         this.lastJudgement = "miss";
+        eachLine.killLastestNote();
       }
     });
   }
 
   lineJudge(line) {
     let result = line.judgeLine(this.timer);
-    if (result == "miss") {
-      this.combo = 0;
-      this.noteCount += 1;
-      this.lastJudgement = "miss";
-    } else if (result != undefined && result != "miss") {
+    if (result != undefined && result != "MISS" && result != "UNREACHED") {
       this.combo += 1;
       this.noteCount += 1;
-      line.hitbox();
-      if (result == "perfect") {
+      if (result == "PERFECT") {
         this.score += 100;
-        this.lastJudgement = "perfect";
-      } else if (result == "good") {
+        this.lastJudgement = "PERFECT";
+      } else if (result == "GOOD") {
         this.score += 50;
-        this.lastJudgement = "good";
+        this.lastJudgement = "GOOD";
       }
+      line.hitbox();
+      line.killLastestNote();
     }
   }
 
@@ -276,21 +276,27 @@ class Game {
   runChart() {
     let nextNoteLine = this.chart.chartList[0][0];
     let nextNoteTiming = this.chart.chartList[0][1];
+    let nextNoteType = this.chart.chartList[0][2];
     if (this.isProperTime(nextNoteTiming)) {
       nextNoteTiming += this.fallingTime;
-      switch (nextNoteLine) {
-        case 0:
-          this.line0.createNotes(nextNoteTiming);
-          break;
-        case 1:
-          this.line1.createNotes(nextNoteTiming);
-          break;
-        case 2:
-          this.line2.createNotes(nextNoteTiming);
-          break;
-        case 3:
-          this.line3.createNotes(nextNoteTiming);
-          break;
+      switch(nextNoteType) {
+        case "note":
+          switch (nextNoteLine) {
+            case 0:
+              this.line0.createNotes(nextNoteTiming);
+              break;
+            case 1:
+              this.line1.createNotes(nextNoteTiming);
+              break;
+            case 2:
+              this.line2.createNotes(nextNoteTiming);
+              break;
+            case 3:
+              this.line3.createNotes(nextNoteTiming);
+              break;
+          }
+        case "hold":
+          // TODO
       }
       this.chart.chartList.shift();
     }

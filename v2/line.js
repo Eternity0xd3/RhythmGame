@@ -25,22 +25,24 @@ class Line {
     this.noteGroup.push(note);
   }
 
+  createHolds(targetTiming, lastTime){
+    let hold = new Hold(this.line.id, targetTiming, lastTime)
+    this.noteGroup.push(hold)
+  }
+
   moveNotes(speed) {
     this.noteGroup.forEach((eachNote) => {
       eachNote.move(speed);
     });
   }
 
-  killOutOfRangeNotes() {
+  killLastestNote() {
     if (this.noteGroup.length == 0) {
       return;
     }
     let lastNote = this.noteGroup[0];
-    if (lastNote.y >= this.line.clientHeight + 50) {
-      lastNote.kill();
-      this.noteGroup.shift();
-      return "killed";
-    }
+    lastNote.kill();
+    this.noteGroup.shift();
   }
 
   judgeLine(nowTiming) {
@@ -48,11 +50,11 @@ class Line {
       return;
     }
     let lastNote = this.noteGroup[0];
-    let result = lastNote.judgeNote(nowTiming);
-    if (result != undefined) {
-      this.noteGroup.shift();
+    if(lastNote.getType == "note"){
+      return lastNote.getStatus(nowTiming);
+    }else if(lastNote.getType == "hold"){
+      return lastNote.getHoldTopStatus(nowTiming);
     }
-    return result;
   }
 
   restartLine() {
