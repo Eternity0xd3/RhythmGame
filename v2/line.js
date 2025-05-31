@@ -25,9 +25,9 @@ class Line {
     this.noteGroup.push(note);
   }
 
-  createHolds(targetTiming, lastTime){
-    let hold = new Hold(this.line.id, targetTiming, lastTime)
-    this.noteGroup.push(hold)
+  createHolds(targetTiming, lastTime) {
+    let hold = new Hold(this.line.id, targetTiming, lastTime);
+    this.noteGroup.push(hold);
   }
 
   moveNotes(speed) {
@@ -45,16 +45,50 @@ class Line {
     this.noteGroup.shift();
   }
 
-  judgeLine(nowTiming) {
+  judgeLineNote(nowTiming) {
     if (this.noteGroup.length == 0) {
       return;
     }
     let lastNote = this.noteGroup[0];
-    if(lastNote.getType == "note"){
+    if (lastNote.getType() == "note") {
       return lastNote.getStatus(nowTiming);
-    }else if(lastNote.getType == "hold"){
+    } else if (lastNote.getType() == "hold") {
+      return lastNote.getHoldStatus(nowTiming);
+    }
+  }
+
+  getLastHoldTopState(nowTiming) {
+    if (this.noteGroup.length == 0) {
+      return;
+    }
+    let lastNote = this.noteGroup[0];
+    if (lastNote.getType() == "hold") {
       return lastNote.getHoldTopStatus(nowTiming);
     }
+  }
+
+  getLastHoldState(nowTiming) {
+    if (this.noteGroup.length == 0) {
+      return;
+    }
+    let lastNote = this.noteGroup[0];
+    if (lastNote.getType() == "hold") {
+      return this.noteGroup[0].getHoldStatus(nowTiming);
+    }
+  }
+
+  getNextNoteType() {
+    if (this.noteGroup.length == 0) {
+      return;
+    }
+    return this.noteGroup[0].getType();
+  }
+
+  getLastNote() {
+    if (this.noteGroup.length == 0) {
+      return;
+    }
+    return this.noteGroup[0];
   }
 
   restartLine() {
@@ -83,5 +117,26 @@ class Line {
       }.bind(this),
       40
     );
+  }
+
+  startHoldHitbox(){
+    let index = 0;
+    this.box.src = this.imgList[1];
+    this.box.style.display = "block";
+    this.animation = setInterval(
+      function () {
+        let currentImg = this.imgList[index];
+        this.box.src = currentImg;
+        index = (index + 1) % this.imgList.length;
+      }.bind(this),
+      40
+    );
+  }
+
+  cancelHoldHitBox(){
+    if(this.animation){
+      clearInterval(this.animation);
+      this.box.style.display = "none";
+    }
   }
 }

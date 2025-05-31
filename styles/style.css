@@ -85,6 +85,7 @@ img.hitbox {
   position: absolute;
   display: none;
   mix-blend-mode: screen;
+  z-index: 3;
 }
 
 #output-combo {

@@ -1,6 +1,6 @@
 // Tasks:
 // 1.generate chart
-// format:[[line,timing,type,(other args)], [line,timing,type,(other args)], ...]
+// format:[[line,timing,type,other args], [line,timing,type,other args], ...]
 // args: hold: last time
 //       events: [eventType, args]
 
@@ -27,6 +27,7 @@ class Chart {
         Math.floor(Math.random() * 4),
         nowTiming + this.timePerBeat * i,
         "note",
+        0
       ]);
     }
     this.chartState = true;
@@ -39,7 +40,7 @@ class Chart {
         Math.floor(Math.random() * 4),
         nowTiming + this.timePerBeat * i,
         "hold",
-        timePerBeat,
+        this.timePerBeat * 0.75,
       ]);
     }
     this.chartState = true;
