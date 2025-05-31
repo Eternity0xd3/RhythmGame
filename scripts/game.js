@@ -19,6 +19,7 @@ class Game {
     this.speedInput = document.getElementById("speed");
     this.bpmInput = document.getElementById("bpm");
     this.beatInput = document.getElementById("beat");
+    this.chartInput = document.getElementById("chart");
     this.save_button = document.getElementById("save-btn");
     this.continue_button = document.getElementById("continue-btn");
     this.restart_button = document.getElementById("restart-btn");
@@ -32,6 +33,8 @@ class Game {
     this.speed = 13;
     this.bpm = 200;
     this.beat = 8;
+    this.chartNumber = 1;
+    this.timePerBeat = (1000 * 60) / this.bpm / (this.beat / 4);
 
     // init
     this.gameState = "menu"; // enum: menu/settings/running/pause
@@ -39,6 +42,9 @@ class Game {
     this.fps = 60;
     this.timer = 0;
     this.fallingTime = this.arrivingTiming();
+    this.keyStates = [false, false, false, false];
+    this.previousKeyStates = [false, false, false, false];
+    this.lastHoldComboTime = -1000;
     this.generator = "random";
 
     //output
@@ -63,6 +69,8 @@ class Game {
         this.runChart();
         this.linesMove(speed);
         this.output();
+        this.keyEvents();
+        this.lineJudgeContinuous();
         //console.log(this.timer);
         this.timer += deltaTime;
       }.bind(this),
@@ -76,60 +84,32 @@ class Game {
     window.addEventListener("keydown", (event) => {
       switch (event.key) {
         case "d":
-          if (flags[0]) {
-            return;
-          }
-          flags[0] = true;
-          this.lineJudge(this.line0);
-          this.line0.line.style.backgroundImage =
-            "url(../static/img/keylight-2.png)";
+          this.keyStates[0] = true;
           break;
         case "f":
-          if (flags[1]) {
-            return;
-          }
-          flags[1] = true;
-          this.lineJudge(this.line1);
-          this.line1.line.style.backgroundImage =
-            "url(../static/img/keylight-2.png)";
+          this.keyStates[1] = true;
           break;
         case "j":
-          if (flags[2]) {
-            return;
-          }
-          flags[2] = true;
-          this.lineJudge(this.line2);
-          this.line2.line.style.backgroundImage =
-            "url(../static/img/keylight-2.png)";
+          this.keyStates[2] = true;
           break;
         case "k":
-          if (flags[3]) {
-            return;
-          }
-          flags[3] = true;
-          this.lineJudge(this.line3);
-          this.line3.line.style.backgroundImage =
-            "url(../static/img/keylight-2.png)";
+          this.keyStates[3] = true;
           break;
       }
     });
     window.addEventListener("keyup", (event) => {
       switch (event.key) {
         case "d":
-          flags[0] = false;
-          this.line0.line.style.backgroundImage = "none";
+          this.keyStates[0] = false;
           break;
         case "f":
-          flags[1] = false;
-          this.line1.line.style.backgroundImage = "none";
+          this.keyStates[1] = false;
           break;
         case "j":
-          flags[2] = false;
-          this.line2.line.style.backgroundImage = "none";
+          this.keyStates[2] = false;
           break;
         case "k":
-          flags[3] = false;
-          this.line3.line.style.backgroundImage = "none";
+          this.keyStates[3] = false;
           break;
         case "Escape":
           if (this.gameState == "running") {
@@ -175,6 +155,42 @@ class Game {
     }.bind(this);
   }
 
+  keyEvents() {
+    if (this.keyStates[0] && !this.previousKeyStates[0]) {
+      this.lineJudgeTrigger(this.line0);
+      this.line0.line.style.backgroundImage =
+        "url(../static/img/keylight-2.png)";
+    }
+    if (!this.keyStates[0]) {
+      this.line0.line.style.backgroundImage = "none";
+    }
+    if (this.keyStates[1] && !this.previousKeyStates[1]) {
+      this.lineJudgeTrigger(this.line1);
+      this.line1.line.style.backgroundImage =
+        "url(../static/img/keylight-2.png)";
+    }
+    if (!this.keyStates[1]) {
+      this.line1.line.style.backgroundImage = "none";
+    }
+    if (this.keyStates[2] && !this.previousKeyStates[2]) {
+      this.lineJudgeTrigger(this.line2);
+      this.line2.line.style.backgroundImage =
+        "url(../static/img/keylight-2.png)";
+    }
+    if (!this.keyStates[2]) {
+      this.line2.line.style.backgroundImage = "none";
+    }
+    if (this.keyStates[3] && !this.previousKeyStates[3]) {
+      this.lineJudgeTrigger(this.line3);
+      this.line3.line.style.backgroundImage =
+        "url(../static/img/keylight-2.png)";
+    }
+    if (!this.keyStates[3]) {
+      this.line3.line.style.backgroundImage = "none";
+    }
+    this.previousKeyStates = [...this.keyStates];
+  }
+
   startGame() {
     this.gameState = "running";
     this.menu.style.display = "none";
@@ -183,6 +199,7 @@ class Game {
     this.chart = new Chart(this.bpm, this.beat, this.maxNotes);
     this.generateChart(this.timer);
     this.timer = -1000;
+    this.fallingTime = this.arrivingTiming();
     this.loop(this.speed, this.fps);
   }
 
@@ -193,6 +210,7 @@ class Game {
     this.speedInput.value = this.speed;
     this.bpmInput.value = this.bpm;
     this.beatInput.value = this.beat;
+    this.chartInput.value = this.chartNumber;
   }
 
   saveSettings() {
@@ -202,6 +220,18 @@ class Game {
     this.speed = Number(this.speedInput.value);
     this.bpm = Number(this.bpmInput.value);
     this.beat = Number(this.beatInput.value);
+    this.chartNumber = Number(this.chartInput.value);
+    switch (this.chartNumber) {
+      case 1:
+        this.generator = "random";
+        break;
+      case 2:
+        this.generator = "randomHold";
+        break;
+      default:
+        this.generator = "random";
+    }
+
     console.log([this.speed, this.bpm, this.beat]);
   }
 
@@ -236,31 +266,93 @@ class Game {
   linesMove(speed) {
     this.lines.forEach((eachLine) => {
       eachLine.moveNotes(speed);
-      let result = eachLine.killOutOfRangeNotes();
-      if (result == "killed") {
-        this.combo = 0;
-        this.noteCount += 1;
-        this.lastJudgement = "miss";
+      if (eachLine.getNextNoteType() == "note") {
+        // kill notes that didn't pressed
+        let result = eachLine.judgeLineNote(this.timer);
+        if (result == "MISS") {
+          this.combo = 0;
+          this.noteCount += 1;
+          this.lastJudgement = "miss";
+          eachLine.killLastestNote();
+        }
+      } else if (eachLine.getNextNoteType() == "hold") {
+        // kill the holds that finished
+        let result = eachLine.getLastHoldState(this.timer);
+        if (result == "FINISH") {
+          eachLine.killLastestNote();
+          eachLine.cancelHoldHitBox();
+        }
+        let holdTopResult = eachLine.getLastHoldTopState(this.timer);
+        if (
+          holdTopResult == "HOLD_TOP_MISS" &&
+          eachLine.getLastHoldState() == "UNREACHED"
+        ) {
+          this.combo = 0;
+          this.noteCount += 1;
+          this.lastJudgement = "miss";
+          eachLine.getLastNote().release();
+          eachLine.cancelHoldHitBox();
+        }
       }
     });
   }
 
-  lineJudge(line) {
-    let result = line.judgeLine(this.timer);
-    if (result == "miss") {
-      this.combo = 0;
-      this.noteCount += 1;
-      this.lastJudgement = "miss";
-    } else if (result != undefined && result != "miss") {
-      this.combo += 1;
-      this.noteCount += 1;
-      line.hitbox();
-      if (result == "perfect") {
-        this.score += 100;
-        this.lastJudgement = "perfect";
-      } else if (result == "good") {
-        this.score += 50;
-        this.lastJudgement = "good";
+  lineJudgeContinuous() {
+    let lineID = 0;
+    this.lines.forEach((eachLine) => {
+      if (
+        eachLine.getNextNoteType() == "hold" &&
+        eachLine.getLastHoldState() == "HOLDING"
+      ) {
+        if (!this.keyStates[lineID]) {
+          eachLine.getLastNote().release();
+          this.combo = 0;
+          this.noteCount += 1;
+          this.lastJudgement = "miss";
+          eachLine.cancelHoldHitBox();
+        }
+      }
+      if (eachLine.getLastHoldState() == "HOLDING") {
+        if (this.timer - this.lastHoldComboTime > this.timePerBeat) {
+          this.score += 100;
+          this.noteCount += 1;
+          this.combo += 1;
+          this.lastJudgement = "PERFECT";
+          this.lastHoldComboTime = this.timer;
+        }
+      }
+      lineID += 1;
+    });
+  }
+
+  lineJudgeTrigger(line) {
+    if (line.getNextNoteType() == "note") {
+      let result = line.judgeLineNote(this.timer);
+      if (result != undefined && result != "MISS" && result != "UNREACHED") {
+        this.combo += 1;
+        this.noteCount += 1;
+        if (result == "PERFECT") {
+          this.score += 100;
+          this.lastJudgement = "PERFECT";
+        } else if (result == "GOOD") {
+          this.score += 50;
+          this.lastJudgement = "GOOD";
+        }
+        line.hitbox();
+        line.killLastestNote();
+      }
+    } else if (line.getNextNoteType() == "hold") {
+      if (line.getLastHoldState() == "UNREACHED") {
+        let result = line.getLastHoldTopState(this.timer);
+        if (result == "HOLD_TOP_PERFECT") {
+          this.score += 100;
+          this.lastJudgement = "PERFECT";
+          this.noteCount += 1;
+          this.combo += 1;
+          this.lastHoldComboTime = this.timer;
+          line.startHoldHitbox();
+          line.getLastNote().holding();
+        }
       }
     }
   }
@@ -270,26 +362,50 @@ class Game {
       case "random":
         this.chart.random(timing);
         break;
+      case "randomHold":
+        this.chart.randomHold(timing);
+        break;
     }
   }
 
   runChart() {
     let nextNoteLine = this.chart.chartList[0][0];
     let nextNoteTiming = this.chart.chartList[0][1];
-    if (this.isProperTime(nextNoteTiming)) {
-      nextNoteTiming += this.fallingTime;
-      switch (nextNoteLine) {
-        case 0:
-          this.line0.createNotes(nextNoteTiming);
+    let nextNoteType = this.chart.chartList[0][2];
+    let nextNoteArgument = this.chart.chartList[0][3];
+    if (this.isProperTime(nextNoteTiming - this.fallingTime)) {
+      switch (nextNoteType) {
+        case "note":
+          switch (nextNoteLine) {
+            case 0:
+              this.line0.createNotes(nextNoteTiming);
+              break;
+            case 1:
+              this.line1.createNotes(nextNoteTiming);
+              break;
+            case 2:
+              this.line2.createNotes(nextNoteTiming);
+              break;
+            case 3:
+              this.line3.createNotes(nextNoteTiming);
+              break;
+          }
           break;
-        case 1:
-          this.line1.createNotes(nextNoteTiming);
-          break;
-        case 2:
-          this.line2.createNotes(nextNoteTiming);
-          break;
-        case 3:
-          this.line3.createNotes(nextNoteTiming);
+        case "hold":
+          switch (nextNoteLine) {
+            case 0:
+              this.line0.createHolds(nextNoteTiming, nextNoteArgument);
+              break;
+            case 1:
+              this.line1.createHolds(nextNoteTiming, nextNoteArgument);
+              break;
+            case 2:
+              this.line2.createHolds(nextNoteTiming, nextNoteArgument);
+              break;
+            case 3:
+              this.line3.createHolds(nextNoteTiming, nextNoteArgument);
+              break;
+          }
           break;
       }
       this.chart.chartList.shift();
@@ -312,7 +428,7 @@ class Game {
 
   arrivingTiming() {
     let height = this.line0.line.clientHeight;
-    let t = height / (this.speed / (1000 / this.fps));
+    let t = (height / this.speed) * (1000 / this.fps);
     return t;
   }
 

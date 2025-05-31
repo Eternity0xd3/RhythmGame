@@ -1,6 +1,8 @@
 // Tasks:
 // 1.generate chart
-// format:[[line,timing], [line,timing], ...]
+// format:[[line,timing,type,other args], [line,timing,type,other args], ...]
+// args: hold: last time
+//       events: [eventType, args]
 
 class Chart {
   constructor(bpm, noteBeat, maxNotes) {
@@ -24,6 +26,21 @@ class Chart {
       this.chartList.push([
         Math.floor(Math.random() * 4),
         nowTiming + this.timePerBeat * i,
+        "note",
+        0,
+      ]);
+    }
+    this.chartState = true;
+  }
+
+  randomHold(nowTiming) {
+    let len = this.chartList.length;
+    for (var i = 0; i < this.maxNotes - len; i++) {
+      this.chartList.push([
+        Math.floor(Math.random() * 4),
+        nowTiming + this.timePerBeat * i,
+        "hold",
+        this.timePerBeat * 0.75,
       ]);
     }
     this.chartState = true;

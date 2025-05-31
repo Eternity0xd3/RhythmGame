@@ -5,9 +5,10 @@
     <meta name="Rhythm game" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light" />
     <title>Rhythm game</title>
-    <link rel="stylesheet" href="./styles/style.css" />
+    <link rel="stylesheet" href="../styles/style.css" />
     <script src="./scripts/chart.js"></script>
     <script src="./scripts/game.js"></script>
+    <script src="./scripts/hold.js"></script>
     <script src="./scripts/line.js"></script>
     <script src="./scripts/note.js"></script>
   </head>
@@ -53,7 +54,7 @@
         <div id="content-settings">
           <h2>Settings</h2>
           <div class="input-group">
-            <h3 style="font-size: 1em; line-height: 1.3em">speed</h3>
+            <h3 style="font-size: 1em; line-height: 1.3em">速度</h3>
             <input class="input" id="speed" maxlength="3" />
           </div>
           <div class="input-group">
@@ -61,9 +62,14 @@
             <input class="input" id="bpm" maxlength="5" />
           </div>
           <div class="input-group">
-            <h3 style="font-size: 1em; line-height: 1.3em">beat</h3>
+            <h3 style="font-size: 1em; line-height: 1.3em">节拍数</h3>
             <input class="input" id="beat" maxlength="3" />
           </div>
+          <div class="input-group">
+            <h3 style="font-size: 1em; line-height: 1.3em">铺面类型</h3>
+            <input class="input" id="chart" maxlength="3" />
+          </div>
+          <p>1 = 随机tap; 2 = 随机hold</p>
           <br />
           <button id="save-btn">保存设置</button>
         </div>

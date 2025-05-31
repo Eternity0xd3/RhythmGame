@@ -5,11 +5,14 @@
 // 4.judgement of single note => judgeNote()
 
 class Note {
+  PERFECT = 75;
+  GOOD = 150;
+
   constructor(line, timing) {
     //initialize variables
     this.line = document.getElementById(line);
     this.y = 0;
-    this.timing = timing;
+    this.targetTiming = timing;
     //Add a note div to line
     this.note = document.createElement("div");
     this.note.className = "note";
@@ -25,25 +28,14 @@ class Note {
     this.note.style.top = this.y + "px";
   }
 
-  judgeNote(getTiming) {
-    const PERFECT_TIMING = 50;
-    const GOOD_TIMING = 100;
-    const BAD_TIMING = 200;
-    let gapOfTiming = Math.abs(this.timing - getTiming);
-    let result;
-    if (gapOfTiming <= PERFECT_TIMING) {
-      //perfect judgment
-      result = "perfect";
-    } else if (gapOfTiming <= GOOD_TIMING) {
-      //good judgment
-      result = "good";
-    } else if (gapOfTiming <= BAD_TIMING) {
-      //press too early
-      result = "miss";
-    }
-    if (result != undefined) {
-      this.kill();
-    }
-    return result;
+  getStatus(timing) {
+    if (Math.abs(timing - this.targetTiming) < this.PERFECT) return "PERFECT";
+    if (Math.abs(timing - this.targetTiming) < this.GOOD) return "GOOD";
+    if (timing - this.targetTiming > this.GOOD) return "MISS";
+    return "UNREACHED";
+  }
+
+  getType(){
+    return "note"
   }
 }
