@@ -119,7 +119,7 @@ class Line {
     );
   }
 
-  startHoldHitbox(){
+  startHoldHitbox() {
     let index = 0;
     this.box.src = this.imgList[1];
     this.box.style.display = "block";
@@ -133,8 +133,8 @@ class Line {
     );
   }
 
-  cancelHoldHitBox(){
-    if(this.animation){
+  cancelHoldHitBox() {
+    if (this.animation) {
       clearInterval(this.animation);
       this.box.style.display = "none";
     }

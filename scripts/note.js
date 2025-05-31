@@ -35,7 +35,7 @@ class Note {
     return "UNREACHED";
   }
 
-  getType(){
-    return "note"
+  getType() {
+    return "note";
   }
 }
