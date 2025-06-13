@@ -228,6 +228,9 @@ class Game {
       case 2:
         this.generator = "randomHold";
         break;
+      case 3:
+        this.generator = "fixed";
+        break;
       default:
         this.generator = "random";
     }
@@ -365,10 +368,14 @@ class Game {
       case "randomHold":
         this.chart.randomHold(timing);
         break;
+      case "fixed":
+        this.chart.fixed(timing);
+        break;
     }
   }
 
   runChart() {
+    if (this.chart.chartList.length <= 0) return;
     let nextNoteLine = this.chart.chartList[0][0];
     let nextNoteTiming = this.chart.chartList[0][1];
     let nextNoteType = this.chart.chartList[0][2];
@@ -409,6 +416,11 @@ class Game {
           break;
       }
       this.chart.chartList.shift();
+
+      let thirdNoteTiming = this.chart.chartList[0][1];
+      if (thirdNoteTiming === nextNoteTiming) {
+        this.runChart();
+      }
     }
     this.examineChart();
   }
