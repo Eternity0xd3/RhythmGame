@@ -80,13 +80,15 @@ class Game {
     );
 
     //fix: create a new interval for timer for accuracy
-    this.timerLoop = setInterval(function(){
-      if (this.gameState != "running") {
-        clearInterval(this.timerLoop);
-      }
-      this.timer += 15
-    }.bind(this),
-    15)
+    this.timerLoop = setInterval(
+      function () {
+        if (this.gameState != "running") {
+          clearInterval(this.timerLoop);
+        }
+        this.timer += 15;
+      }.bind(this),
+      15
+    );
   }
 
   events() {
@@ -250,17 +252,17 @@ class Game {
     console.log([this.speed, this.bpm, this.beat]);
   }
 
-  readMeta(path){
+  readMeta(path) {
     fetch(path + "/meta.json")
       .then((response) => response.json())
-      .then((json) => (this.song = new Audio(path+"/"+json.song)));
+      .then((json) => (this.song = new Audio(path + "/" + json.song)));
   }
 
   pause() {
     if (this.gameState != "running") {
       return;
     }
-    if(this.song){
+    if (this.song) {
       this.song.pause();
     }
     this.gameState = "pause";
@@ -268,7 +270,7 @@ class Game {
   }
 
   continue() {
-    if(this.song){
+    if (this.song) {
       this.song.play();
     }
     this.gameState = "running";
@@ -476,7 +478,7 @@ class Game {
     let combo = this.combo >= 3 ? this.combo : "";
     let accuracy = this.noteCount == 0 ? 0 : this.score / this.noteCount;
     accuracy = Math.floor(accuracy * 100) / 100;
-    let innerHTML = "acc:" + accuracy + "%; timer:"+ this.timer;
+    let innerHTML = "acc:" + accuracy + "%; timer:" + this.timer;
     this.outputDivCombo.innerHTML = combo;
     this.outputDivAcc.innerHTML = innerHTML;
     this.outputDivJudge.innerHTML = this.lastJudgement;
