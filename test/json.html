@@ -28,10 +28,9 @@
       </fieldset>
     </div>
     <script>
-      fetch("../tracks/Armageddom/data.json")
+      fetch("../tracks/Armageddom/meta.json")
         .then((response) => response.json())
-        .then((json) => console.log(json));
-      fetch("../tracks/Armageddom/data.json").then((json) => console.log(json));
+        .then((json) => console.log(json.song));
     </script>
   </body>
 </html>

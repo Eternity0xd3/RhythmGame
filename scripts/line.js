@@ -120,6 +120,9 @@ class Line {
   }
 
   startHoldHitbox() {
+    if (this.animation) {
+      clearInterval(this.animation);
+    }
     let index = 0;
     this.box.src = this.imgList[1];
     this.box.style.display = "block";

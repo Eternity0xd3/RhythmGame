@@ -30,10 +30,10 @@ class Game {
     this.events();
 
     // init settings
-    this.speed = 13;
+    this.speed = 18;
     this.bpm = 200;
     this.beat = 8;
-    this.chartNumber = 1;
+    this.chartNumber = 3;
     this.timePerBeat = (1000 * 60) / this.bpm / (this.beat / 4);
 
     // init
@@ -46,6 +46,7 @@ class Game {
     this.previousKeyStates = [false, false, false, false];
     this.lastHoldComboTime = -1000;
     this.generator = "random";
+    this.song = null;
 
     //output
     this.lastJudgement = "";
@@ -66,16 +67,26 @@ class Game {
         if (this.gameState != "running") {
           clearInterval(this.mainloop);
         }
+        if (this.song && this.timer >= 0 && this.gameState == "running") {
+          this.song.play();
+        }
         this.runChart();
         this.linesMove(speed);
         this.output();
         this.keyEvents();
         this.lineJudgeContinuous();
-        //console.log(this.timer);
-        this.timer += deltaTime;
       }.bind(this),
       deltaTime
     );
+
+    //fix: create a new interval for timer for accuracy
+    this.timerLoop = setInterval(function(){
+      if (this.gameState != "running") {
+        clearInterval(this.timerLoop);
+      }
+      this.timer += 15
+    }.bind(this),
+    15)
   }
 
   events() {
@@ -192,6 +203,21 @@ class Game {
   }
 
   startGame() {
+    switch (this.chartNumber) {
+      case 1:
+        this.generator = "random";
+        break;
+      case 2:
+        this.generator = "randomHold";
+        break;
+      case 3:
+        this.generator = "fixed";
+        this.readMeta("../tracks/Armageddom");
+        break;
+      default:
+        this.generator = "random";
+    }
+
     this.gameState = "running";
     this.menu.style.display = "none";
     this.gameDiv.style.display = "block";
@@ -221,32 +247,30 @@ class Game {
     this.bpm = Number(this.bpmInput.value);
     this.beat = Number(this.beatInput.value);
     this.chartNumber = Number(this.chartInput.value);
-    switch (this.chartNumber) {
-      case 1:
-        this.generator = "random";
-        break;
-      case 2:
-        this.generator = "randomHold";
-        break;
-      case 3:
-        this.generator = "fixed";
-        break;
-      default:
-        this.generator = "random";
-    }
-
     console.log([this.speed, this.bpm, this.beat]);
+  }
+
+  readMeta(path){
+    fetch(path + "/meta.json")
+      .then((response) => response.json())
+      .then((json) => (this.song = new Audio(path+"/"+json.song)));
   }
 
   pause() {
     if (this.gameState != "running") {
       return;
     }
+    if(this.song){
+      this.song.pause();
+    }
     this.gameState = "pause";
     this.pauseDiv.style.display = "block";
   }
 
   continue() {
+    if(this.song){
+      this.song.play();
+    }
     this.gameState = "running";
     this.pauseDiv.style.display = "none";
     this.loop(this.speed, this.fps);
@@ -254,6 +278,10 @@ class Game {
 
   restart() {
     clearInterval(this.mainloop);
+    clearInterval(this.timerLoop);
+    if (this.song) {
+      this.song.pause();
+    }
     this.lines.forEach((element) => {
       element.restartLine();
     });
@@ -448,7 +476,7 @@ class Game {
     let combo = this.combo >= 3 ? this.combo : "";
     let accuracy = this.noteCount == 0 ? 0 : this.score / this.noteCount;
     accuracy = Math.floor(accuracy * 100) / 100;
-    let innerHTML = "acc:" + accuracy + "%";
+    let innerHTML = "acc:" + accuracy + "%; timer:"+ this.timer;
     this.outputDivCombo.innerHTML = combo;
     this.outputDivAcc.innerHTML = innerHTML;
     this.outputDivJudge.innerHTML = this.lastJudgement;
