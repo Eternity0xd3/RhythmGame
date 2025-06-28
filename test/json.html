@@ -28,9 +28,16 @@
       </fieldset>
     </div>
     <script>
+      let startTime = new Date();
       fetch("../tracks/Armageddom/meta.json")
         .then((response) => response.json())
         .then((json) => console.log(json.song));
+
+        setInterval(() => {
+          let now = new Date();
+          let delta = now-startTime;
+          console.log(delta)
+        })
     </script>
   </body>
 </html>

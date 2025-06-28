@@ -30,7 +30,7 @@ class Game {
     this.events();
 
     // init settings
-    this.speed = 18;
+    this.speed = 9;
     this.bpm = 200;
     this.beat = 8;
     this.chartNumber = 3;
@@ -39,7 +39,7 @@ class Game {
     // init
     this.gameState = "menu"; // enum: menu/settings/running/pause
     this.maxNotes = 20;
-    this.fps = 60;
+    this.fps = 120;
     this.timer = 0;
     this.fallingTime = this.arrivingTiming();
     this.keyStates = [false, false, false, false];
@@ -47,6 +47,7 @@ class Game {
     this.lastHoldComboTime = -1000;
     this.generator = "random";
     this.song = null;
+    this.storageTimer = -1000;
 
     //output
     this.lastJudgement = "";
@@ -61,6 +62,7 @@ class Game {
   }
 
   loop(speed, fps) {
+    this.startTime = new Date();
     let deltaTime = 1000 / fps;
     this.mainloop = setInterval(
       function () {
@@ -75,20 +77,22 @@ class Game {
         this.output();
         this.keyEvents();
         this.lineJudgeContinuous();
+        this.now = new Date();
+        this.timer = this.now - this.startTime + this.storageTimer;
       }.bind(this),
       deltaTime
     );
 
     //fix: create a new interval for timer for accuracy
-    this.timerLoop = setInterval(
-      function () {
-        if (this.gameState != "running") {
-          clearInterval(this.timerLoop);
-        }
-        this.timer += 15;
-      }.bind(this),
-      15
-    );
+    // this.timerLoop = setInterval(
+    //   function () {
+    //     if (this.gameState != "running") {
+    //       clearInterval(this.timerLoop);
+    //     }
+    //     this.timer += 10;
+    //   }.bind(this),
+    //   10
+    // );
   }
 
   events() {
@@ -267,6 +271,7 @@ class Game {
     }
     this.gameState = "pause";
     this.pauseDiv.style.display = "block";
+    this.storageTimer = this.timer;
   }
 
   continue() {
